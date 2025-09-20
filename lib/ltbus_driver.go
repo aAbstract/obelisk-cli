@@ -6,7 +6,7 @@ const LTBUS_READ_FC uint8 = 0xAA
 const LTBUS_READ_RESP_FC uint8 = 0xAB
 const LTBUS_WRITE_FC uint8 = 0xEA
 
-const LTBUS_DATA_START uint8 = 7
+const LTBUS_DATA_START int = 7
 
 var CRC16_POLYNOMIAL = []uint16{
 	0x0000, 0x1189, 0x2312, 0x329B, 0x4624, 0x57AD, 0x6536, 0x74BF,

@@ -1,0 +1,34 @@
+{
+    "device_port": "/dev/ttyACM1",
+    "driver": {
+        "driver_type": "LTBus",
+        "driver_config": {
+            "ltbus_msgs": [
+                {
+                    "register_name": "MOTOR_DUTY",
+                    "register_addr": "0xD000",
+                    "register_data_type": "F32",
+                    "register_param_type": 1
+                },
+                {
+                    "register_name": "POS_RAD",
+                    "register_addr": "0xD004",
+                    "register_data_type": "F32",
+                    "register_param_type": 0
+                },
+                {
+                    "register_name": "OMG_RPS",
+                    "register_addr": "0xD008",
+                    "register_data_type": "F32",
+                    "register_param_type": 0
+                },
+                {
+                    "register_name": "CTRL_REG",
+                    "register_addr": "0xD00C",
+                    "register_data_type": "F32",
+                    "register_param_type": 2
+                }
+            ]
+        }
+    }
+}

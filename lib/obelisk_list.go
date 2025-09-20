@@ -1,8 +1,8 @@
 package lib
 
 import (
+	"encoding/binary"
 	"fmt"
-	"log"
 	"path/filepath"
 	"runtime"
 	"time"
@@ -16,6 +16,7 @@ func check_ltbus_device(port string) uint16 {
 	if err != nil {
 		return 0
 	}
+	defer serial_port.Close()
 
 	read_req := LTBus_read_request(0xA000, 2)
 	_, err = serial_port.Write(read_req)
@@ -32,7 +33,7 @@ func check_ltbus_device(port string) uint16 {
 		return 0
 	}
 
-	device_id := uint16(ltbus_resp[LTBUS_DATA_START+1])<<8 | uint16(ltbus_resp[LTBUS_DATA_START])
+	device_id := binary.LittleEndian.Uint16(ltbus_resp[LTBUS_DATA_START : LTBUS_DATA_START+2])
 	return device_id
 }
 
@@ -40,6 +41,10 @@ func list_devices_linux() {
 	acm_devices, _ := filepath.Glob("/dev/ttyACM*")
 	usb_devices, _ := filepath.Glob("/dev/ttyUSB*")
 	devices := append(acm_devices, usb_devices...)
+	if len(devices) == 0 {
+		fmt.Println("No USB Devices Found")
+		return
+	}
 
 	fmt.Println("Scanning Devices...")
 	for _, p := range devices {
@@ -52,14 +57,14 @@ func list_devices_linux() {
 }
 
 func list_devices_windows() {
-	log.Fatal("Command `list` is not Implemented on Windows")
+	fmt.Println("Command `list` is not Implemented on Windows")
 }
 
 func list_devices_mac() {
-	log.Fatal("Command `list` is not Implemented on MacOS")
+	fmt.Println("Command `list` is not Implemented on MacOS")
 }
 
-func Obelisk_list() {
+func Obelisk_list(cmd string) {
 	switch runtime.GOOS {
 	case "linux":
 		list_devices_linux()
@@ -68,6 +73,6 @@ func Obelisk_list() {
 	case "darwin":
 		list_devices_mac()
 	default:
-		log.Fatalf("Command `list` -> Unsupported Platform: %s\n", runtime.GOOS)
+		fmt.Printf("Command `list` -> Unsupported Platform: %s\n", runtime.GOOS)
 	}
 }
